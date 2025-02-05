@@ -6,6 +6,7 @@ export class AwsCdkProjectStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // Level 2 Construct
     const vpc = new ec2.Vpc(this, 'MyVpc', {
       maxAzs: 2,
       subnetConfiguration: [
@@ -16,6 +17,11 @@ export class AwsCdkProjectStack extends cdk.Stack {
         },
         {
           name: 'Private',
+          subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+          cidrMask: 24
+        },
+        {
+          name: 'Database',
           subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
           cidrMask: 24
         }
