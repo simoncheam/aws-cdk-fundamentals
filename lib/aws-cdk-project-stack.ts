@@ -3,11 +3,15 @@ import { Construct } from 'constructs';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 
 export class AwsCdkProjectStack extends cdk.Stack {
+
+  // ensure vpc can be read by other stacks
+  public readonly vpc: ec2.Vpc;
+
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // Level 2 Construct
-    const vpc = new ec2.Vpc(this, 'MyVpc', {
+    this.vpc = new ec2.Vpc(this, 'MyVpc', {
       maxAzs: 2,
       subnetConfiguration: [
         {
@@ -30,7 +34,7 @@ export class AwsCdkProjectStack extends cdk.Stack {
 
     // Create output
     new cdk.CfnOutput(this, 'VpcId', {
-      value: vpc.vpcId,
+      value: this.vpc.vpcId,
       description: 'VPC ID'
     })
   }
