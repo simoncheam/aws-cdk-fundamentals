@@ -17,7 +17,7 @@ export class EC2Stack extends cdk.Stack {
 
 
     // EC2 Instance with logical ID MyPrivateEC2
-    const instance = new ec2.Instance(this, 'MyPrivateEC2', {
+    const instance1 = new ec2.Instance(this, 'MyPrivateEC2', {
       // specifies which vpc to launch instance in - passed in from props
       vpc: props.vpc,
       // specifies which type of subnet to use
@@ -34,6 +34,27 @@ export class EC2Stack extends cdk.Stack {
 
     })
     // adds a Name tag to the instance
-    cdk.Tags.of(instance).add('Name', 'MyPrivateEC2');
+    cdk.Tags.of(instance1).add('Name', 'MyPrivateEC2');
+
+
+    // adding a 2nd EC2 instance into private subnet2 in AZ-2
+
+    const instance2 = new ec2.Instance(this, 'MyPrivateEC2-2', {
+
+      vpc: props.vpc,
+      vpcSubnets: {
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        availabilityZones: [cdk.Stack.of(this).availabilityZones[1]],
+
+      },
+      machineImage: new ec2.AmazonLinuxImage({
+        generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2,
+      }),
+      instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO)
+
+
+    });
+    cdk.Tags.of(instance2).add('Name', 'MyPrivateEC2-2');
+
   }
 }
